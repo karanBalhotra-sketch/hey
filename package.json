@@ -38,12 +38,10 @@
   "jest": {
     "testMatch": [
       "**/src/**/*.(test|spec).[jt]s?(x)"
-    ],
-    "testPathIgnorePatterns": [
-      "\\\\node_modules\\\\"
     ]
   },
   "devDependencies": {
-    "gh-pages": "^6.1.1"
+    "gh-pages": "^6.1.1",
+    "jest-junit": "^12.0.0"
   }
 }

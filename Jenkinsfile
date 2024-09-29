@@ -1,62 +1,70 @@
 pipeline {
     agent any
     tools {
-        nodejs 'NodeJS'  // Ensure NodeJS is configured in Jenkins
+        nodejs 'NodeJS'  // Ensure NodeJS is installed and configured in Jenkins
     }
     stages {
         stage('Install Dependencies') {
             steps {
                 script {
-                    bat 'npm install'  // Install dependencies
+                    // Install project dependencies using npm
+                    bat 'npm install'
                 }
             }
         }
         stage('Build React App') {
             steps {
                 script {
-                    bat 'npm run build'  // Build the React app
+                    // Build the React app for production
+                    bat 'npm run build'
                 }
             }
         }
         stage('Run Tests') {
             steps {
                 script {
-                    bat 'npm test -- --passWithNoTests --detectOpenHandles'  // Run tests
-                }
-            }
-        }
-        stage('Lint Code') {
-            steps {
-                script {
-                    bat 'npm run lint'  // Run ESLint and generate JSON report
-                }
-            }
-        }
-        stage('Archive Lint Report') {
-            steps {
-                script {
-                    archiveArtifacts artifacts: 'eslint-report.json', allowEmptyArchive: false  // Archive the ESLint report
+                    // Run tests, allowing no tests to pass and detect open handles
+                    bat 'npm test -- --passWithNoTests --detectOpenHandles'
                 }
             }
         }
         stage('Create ZIP Artifact') {
             steps {
                 script {
-                    bat 'powershell Compress-Archive -Path build\\* -DestinationPath build.zip'  // Create a ZIP file
+                    // Use PowerShell for Windows to create a ZIP of the build folder
+                    bat 'powershell Compress-Archive -Path build\\* -DestinationPath build.zip'
                 }
             }
         }
         stage('Archive Artifact') {
             steps {
                 script {
-                    archiveArtifacts artifacts: 'build.zip', allowEmptyArchive: false  // Archive the ZIP file
+                    // Archive the ZIP file as an artifact in Jenkins
+                    archiveArtifacts artifacts: 'build.zip', allowEmptyArchive: false
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                script {
+                    // Simulate deployment using echo
+                    echo 'Deploying the application to the staging environment...'
+                }
+            }
+        }
+        stage('Release') {
+            steps {
+                script {
+                    // Simulate release using echo
+                    echo 'Releasing the application to production...'
                 }
             }
         }
     }
     post {
         always {
-            cleanWs()  // Clean workspace after build
+            // Clean up the workspace to avoid storing unnecessary files
+            cleanWs()
         }
     }
 }

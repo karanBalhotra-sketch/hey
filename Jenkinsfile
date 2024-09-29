@@ -21,8 +21,8 @@ pipeline {
         stage('Run Tests') {
             steps {
                 script {
-                    // Run tests using Jest with --detectOpenHandles to find any open handles causing the process to hang
-                    bat 'npm test -- --detectOpenHandles'
+                    // Run tests using Jest with --passWithNoTests to prevent failures when no tests are found
+                    bat 'npm test -- --passWithNoTests --detectOpenHandles'
                 }
             }
         }

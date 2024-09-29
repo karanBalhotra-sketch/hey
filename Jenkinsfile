@@ -21,10 +21,22 @@ pipeline {
         stage('Run Tests') {
             steps {
                 script {
-                    // Run tests using Jest with --passWithNoTests to prevent failures when no tests are found
+                    // Run tests using Jest with --passWithNoTests and --detectOpenHandles
                     bat 'npm test -- --passWithNoTests --detectOpenHandles'
                 }
             }
+        }
+    }
+    post {
+        always {
+            // Archive the test results in Jenkins
+            junit 'reports/test-results.xml'
+        }
+        success {
+            echo 'Build and tests completed successfully.'
+        }
+        failure {
+            echo 'Build or tests failed. Check logs for details.'
         }
     }
 }

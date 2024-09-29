@@ -1,7 +1,7 @@
 pipeline {
     agent any
     tools {
-        nodejs 'NodeJS'  // Ensure 'NodeJS' is configured in Jenkins
+        nodejs 'NodeJS'  // Ensure 'NodeJS' is configured in Jenkins as a tool
     }
     stages {
         stage('Install Dependencies') {
@@ -21,22 +21,10 @@ pipeline {
         stage('Run Tests') {
             steps {
                 script {
-                    // Run tests using Jest with --passWithNoTests and --detectOpenHandles
+                    // Run tests, allowing no tests to pass, and use --detectOpenHandles to identify issues
                     bat 'npm test -- --passWithNoTests --detectOpenHandles'
                 }
             }
-        }
-    }
-    post {
-        always {
-            // Archive the test results in Jenkins
-            junit 'reports/test-results.xml'
-        }
-        success {
-            echo 'Build and tests completed successfully.'
-        }
-        failure {
-            echo 'Build or tests failed. Check logs for details.'
         }
     }
 }

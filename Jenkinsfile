@@ -1,54 +1,55 @@
 pipeline {
     agent any
     tools {
-        nodejs 'NodeJS'  // Ensure NodeJS is installed and configured in Jenkins
+        nodejs 'NodeJS'  // Ensure NodeJS is configured in Jenkins
     }
     stages {
         stage('Install Dependencies') {
             steps {
                 script {
-                    // Install project dependencies using npm
-                    bat 'npm install'
+                    bat 'npm install'  // Install dependencies
                 }
             }
         }
         stage('Build React App') {
             steps {
                 script {
-                    // Build the React app for production
-                    bat 'npm run build'
+                    bat 'npm run build'  // Build the React app
                 }
             }
         }
         stage('Run Tests') {
             steps {
                 script {
-                    // Run tests, allowing no tests to pass and detect open handles
-                    bat 'npm test -- --passWithNoTests --detectOpenHandles'
+                    bat 'npm test -- --passWithNoTests --detectOpenHandles'  // Run tests
+                }
+            }
+        }
+        stage('Lint Code') {
+            steps {
+                script {
+                    bat 'npm run lint'  // Run ESLint to check for code quality
                 }
             }
         }
         stage('Create ZIP Artifact') {
             steps {
                 script {
-                    // Use PowerShell for Windows to create a ZIP of the build folder
-                    bat 'powershell Compress-Archive -Path build\\* -DestinationPath build.zip'
+                    bat 'powershell Compress-Archive -Path build\\* -DestinationPath build.zip'  // Create a ZIP file
                 }
             }
         }
         stage('Archive Artifact') {
             steps {
                 script {
-                    // Archive the ZIP file as an artifact in Jenkins
-                    archiveArtifacts artifacts: 'build.zip', allowEmptyArchive: false
+                    archiveArtifacts artifacts: 'build.zip', allowEmptyArchive: false  // Archive the ZIP file
                 }
             }
         }
     }
     post {
         always {
-            // Clean up the workspace to avoid storing unnecessary files
-            cleanWs()
+            cleanWs()  // Clean workspace after build
         }
     }
 }

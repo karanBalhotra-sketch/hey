@@ -31,8 +31,8 @@ pipeline {
         stage('Lint Code') {
             steps {
                 script {
-                    // Run linting with ESLint and store results in eslint-report.json
-                    bat 'npm run lint'
+                    // Run linting with ESLint using double quotes for Windows compatibility
+                    bat 'eslint "src/**/*.js" --fix --format json --output-file eslint-report.json'
                 }
             }
         }

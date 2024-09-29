@@ -4,6 +4,14 @@ pipeline {
         nodejs 'NodeJS'  // Ensure NodeJS is installed and configured in Jenkins
     }
     stages {
+        stage('Clone Repository') {
+            steps {
+                script {
+                    // Clone the repository
+                    git url: 'https://github.com/karanBalhotra-sketch/hey.git', branch: 'main'
+                }
+            }
+        }
         stage('Install Dependencies') {
             steps {
                 script {

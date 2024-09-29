@@ -21,7 +21,7 @@ pipeline {
         stage('Run Tests') {
             steps {
                 script {
-                    // Run tests, allowing no tests to pass, and use --detectOpenHandles to identify issues
+                    // Run tests with correct flags
                     bat 'npm test -- --passWithNoTests --detectOpenHandles'
                 }
             }

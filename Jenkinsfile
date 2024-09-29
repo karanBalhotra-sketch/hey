@@ -52,6 +52,14 @@ pipeline {
                 }
             }
         }
+        stage('Archive ESLint Report') {
+            steps {
+                script {
+                    // Archive the ESLint report as an artifact in Jenkins
+                    archiveArtifacts artifacts: 'eslint-report.json', allowEmptyArchive: false
+                }
+            }
+        }
         stage('Deploy') {
             steps {
                 script {

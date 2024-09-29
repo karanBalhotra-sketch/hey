@@ -1,41 +1,55 @@
-pipeline {
+=pipeline {
     agent any
     tools {
         nodejs 'NodeJS'  // Ensure NodeJS is configured in Jenkins
     }
-    environment {
-        NETLIFY_AUTH_TOKEN = credentials('NETLIFY_AUTH_TOKEN')  // Use stored Netlify token
-    }
     stages {
-        stage('Install Netlify CLI') {
-            steps {
-                script {
-                    // Install Netlify CLI globally
-                    bat 'npm install -g netlify-cli'
-                }
-            }
-        }
         stage('Install Dependencies') {
             steps {
                 script {
-                    // Install project dependencies using npm
-                    bat 'npm install'
+                    bat 'npm install'  // Install dependencies
                 }
             }
         }
         stage('Build React App') {
             steps {
                 script {
-                    // Build the React app for production
-                    bat 'npm run build'
+                    bat 'npm run build'  // Build the React app
                 }
             }
         }
-        stage('Deploy to Netlify') {
+        stage('Run Tests') {
             steps {
-                withEnv(["NETLIFY_AUTH_TOKEN=${env.NETLIFY_AUTH_TOKEN}"]) {
-                    // Deploy to Netlify using Netlify CLI, ensuring the directory is already linked
-                    bat 'netlify deploy --prod --dir=build --message "Automated deploy from Jenkins"'
+                script {
+                    bat 'npm test -- --passWithNoTests --detectOpenHandles'  // Run tests
+                }
+            }
+        }
+        stage('Lint Code') {
+            steps {
+                script {
+                    bat 'npm run lint'  // Run ESLint and generate JSON report
+                }
+            }
+        }
+        stage('Archive Lint Report') {
+            steps {
+                script {
+                    archiveArtifacts artifacts: 'eslint-report.json', allowEmptyArchive: false  // Archive the ESLint report
+                }
+            }
+        }
+        stage('Create ZIP Artifact') {
+            steps {
+                script {
+                    bat 'powershell Compress-Archive -Path build\\* -DestinationPath build.zip'  // Create a ZIP file
+                }
+            }
+        }
+        stage('Archive Artifact') {
+            steps {
+                script {
+                    archiveArtifacts artifacts: 'build.zip', allowEmptyArchive: false  // Archive the ZIP file
                 }
             }
         }

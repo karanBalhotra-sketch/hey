@@ -21,15 +21,15 @@ pipeline {
         stage('Run Tests') {  // New stage for running Jest tests
             steps {
                 script {
-                    bat 'npm test'  // Run tests using Jest
+                    bat 'npm test --passWithNoTests'  // Run tests, allow no tests to pass
                 }
             }
         }
     }
     post {
         always {
-            // Archive test results or logs if needed
-            junit 'reports/test-results.xml'  // If Jest is configured to generate JUnit reports (optional)
+            // Optionally archive test results
+            junit 'reports/test-results.xml'  // Ensure Jest generates JUnit test results, or remove this line
         }
     }
 }

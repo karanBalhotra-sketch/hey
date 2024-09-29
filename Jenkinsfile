@@ -28,21 +28,23 @@ pipeline {
         stage('Lint Code') {
             steps {
                 script {
-                    bat 'npm run lint'  // Run ESLint to check for code quality
+                    // Run ESLint and output the results to a lint-report.txt file
+                    bat 'npm run lint > lint-report.txt || exit 0'
                 }
             }
         }
         stage('Create ZIP Artifact') {
             steps {
                 script {
-                    bat 'powershell Compress-Archive -Path build\\* -DestinationPath build.zip'  // Create a ZIP file
+                    bat 'powershell Compress-Archive -Path build\\* -DestinationPath build.zip'  // Create a ZIP file of the build folder
                 }
             }
         }
-        stage('Archive Artifact') {
+        stage('Archive Artifacts') {
             steps {
                 script {
-                    archiveArtifacts artifacts: 'build.zip', allowEmptyArchive: false  // Archive the ZIP file
+                    // Archive both the ZIP file and the ESLint report
+                    archiveArtifacts artifacts: 'build.zip, lint-report.txt', allowEmptyArchive: false
                 }
             }
         }

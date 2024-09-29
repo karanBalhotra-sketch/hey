@@ -1,23 +1,22 @@
 pipeline {
     agent any
     tools {
-        nodejs 'NodeJS'
+        nodejs 'NodeJS'  // Ensure 'NodeJS' is configured in Jenkins as a tool
     }
     stages {
         stage('Install Dependencies') {
             steps {
                 script {
-                    sh 'npm install'
+                    bat 'npm install'  // Use 'bat' instead of 'sh' for Windows
                 }
             }
         }
         stage('Build') {
             steps {
                 script {
-                    sh 'npm run build'
+                    bat 'npm run build'  // Use 'bat' instead of 'sh' for Windows
                 }
             }
         }
     }
 }
-

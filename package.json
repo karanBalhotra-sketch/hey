@@ -38,10 +38,10 @@
     ]
   },
   "devDependencies": {
-    "eslint": "^8.57.1",  // This is the latest version of ESLint as of your usage
+    "eslint": "^8.57.1",
     "eslint-config-react-app": "^7.0.1",
-    "eslint-plugin-react": "^7.32.0",  // Adding ESLint plugin for React
-    "eslint-plugin-react-hooks": "^4.6.0",  // Adding React Hooks linting
+    "eslint-plugin-react": "^7.32.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "gh-pages": "^6.1.1"
   }
 }

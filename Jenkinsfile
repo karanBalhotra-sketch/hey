@@ -1,7 +1,7 @@
 pipeline {
     agent any
     tools {
-        nodejs 'NodeJS'  // Ensure 'NodeJS' is configured in Jenkins as a tool
+        nodejs 'NodeJS'  // Ensure 'NodeJS' is configured in Jenkins
     }
     stages {
         stage('Install Dependencies') {
@@ -18,18 +18,13 @@ pipeline {
                 }
             }
         }
-        stage('Run Tests') {  // New stage for running Jest tests
+        stage('Run Tests') {
             steps {
                 script {
-                    bat 'npm test --passWithNoTests'  // Run tests, allow no tests to pass
+                    // Run tests using Jest with --detectOpenHandles to find any open handles causing the process to hang
+                    bat 'npm test -- --detectOpenHandles'
                 }
             }
-        }
-    }
-    post {
-        always {
-            // Optionally archive test results
-            junit 'reports/test-results.xml'  // Ensure Jest generates JUnit test results, or remove this line
         }
     }
 }

@@ -32,7 +32,7 @@ pipeline {
             steps {
                 script {
                     // Run linting with ESLint and store results in eslint-report.json
-                    bat 'eslint "src/**/*.js" --fix --format json --output-file eslint-report.json'
+                    bat 'npm run lint'
                 }
             }
         }

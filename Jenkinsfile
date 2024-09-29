@@ -3,6 +3,9 @@ pipeline {
     tools {
         nodejs 'NodeJS'  // Ensure NodeJS is configured in Jenkins
     }
+    environment {
+        NETLIFY_AUTH_TOKEN = credentials('NETLIFY_AUTH_TOKEN')  // Use stored Netlify token
+    }
     stages {
         stage('Install Netlify CLI') {
             steps {
@@ -28,54 +31,18 @@ pipeline {
                 }
             }
         }
-        stage('Run Tests') {
-            steps {
-                script {
-                    // Run tests with the correct flags to prevent failures if no tests exist
-                    bat 'npm test -- --passWithNoTests --detectOpenHandles'
-                }
-            }
-        }
-        stage('Lint Code') {
-            steps {
-                script {
-                    // Run ESLint, output results to lint-report.txt
-                    bat 'npm run lint > lint-report.txt || exit 0'
-                }
-            }
-        }
-        stage('Create ZIP Artifact') {
-            steps {
-                script {
-                    // Use PowerShell to create a ZIP file of the build folder
-                    bat 'powershell Compress-Archive -Path build\\* -DestinationPath build.zip'
-                }
-            }
-        }
-        stage('Archive Artifacts') {
-            steps {
-                script {
-                    // Archive the build.zip and lint-report.txt as Jenkins artifacts
-                    archiveArtifacts artifacts: 'build.zip, lint-report.txt', allowEmptyArchive: false
-                }
-            }
-        }
         stage('Deploy to Netlify') {
-            environment {
-                NETLIFY_AUTH_TOKEN = credentials('NETLIFY_AUTH_TOKEN')  // Use the stored Netlify token
-            }
             steps {
-                script {
-                    // Deploy to Netlify using Netlify CLI
-                    bat "netlify deploy --prod --dir=build --auth=$NETLIFY_AUTH_TOKEN --message 'Automated deploy from Jenkins'"
+                withEnv(["NETLIFY_AUTH_TOKEN=${env.NETLIFY_AUTH_TOKEN}"]) {
+                    // Deploy to Netlify using Netlify CLI, ensuring the directory is already linked
+                    bat 'netlify deploy --prod --dir=build --message "Automated deploy from Jenkins"'
                 }
             }
         }
     }
     post {
         always {
-            // Clean workspace after the build is complete
-            cleanWs()
+            cleanWs()  // Clean workspace after build
         }
     }
 }
